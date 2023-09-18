@@ -13,4 +13,4 @@ git clone: https://github.com/AbiyFanta/Minesweeper
 It should be able to run on most if not all web browsers, I tried on chrome and Opera and they worked fine.
 
 # Contributions
-Shout out Bill Gates for making Microsoft which in turn collabed with Arkadium to make this banger of a game. 🔥 I'll be honest my re-creation wasn't perfect but I'd like to see this recreation be improved to include most if not all the features of the original game.
+Shout out Bill Gates for making Microsoft which in turn collabed with Arkadium to make this banger of a game. 🔥 I'll be honest my re-creation wasn't perfect but I'd like to see this recreation include most if not all the features of the original game.
