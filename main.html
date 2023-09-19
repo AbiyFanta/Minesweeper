@@ -1,9 +1,20 @@
 <!-- Author: Abiy Fanta -->
 <!-- Minesweeper -->
-<!-- I could divide the code into css and js files but I don't want to lol -->
+<!-- I could divide the code into css and js files but keeping it in a single html file is fun -->
 <!-- I'm just a boss like that 😎-->
 <!-- submit a pull request if you want to seperate it -->
-<!DOCTYPE html>
+<!-- DOCUMENTATION -->
+<!-- The game is a 10x10 board with 20 mines -->
+<!-- The mines are randomly generated -->
+<!-- The game is played by clicking on the cells -->
+<!-- If you click on a mine, you lose -->
+<!-- If you click on a cell with no mines around it, it reveals the cells around it -->
+<!-- If you right-click on a cell, it flags it -->
+<!-- If you right-click on a flagged cell, it marks it with a question mark -->
+<!-- If you right-click on a cell with a question mark, it hides it -->
+<!-- If you reveal all the cells without mines, you win -->
+<!-- The game can be reset by clicking the reset button -->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,7 +42,7 @@
             font-size: 18px;
             cursor: pointer;
         }
-        .cell.hidden {
+        .cell.hidden { 
             background-color: #eee;
         }
         .cell.mine {
@@ -49,7 +60,7 @@
     <div class="board" id="board"></div>
     
     <div class="footer">
-        <p>Created by Abiy Fanta - 2023</p>
+        <p>Created by Abiy Fanta - 2023</p> 
 
     </div>
     <script>
@@ -98,91 +109,91 @@
 
         // Calculate the number of mines around a cell
         function countMinesAround(cell) {
-            const row = parseInt(cell.dataset.row);
-            const col = parseInt(cell.dataset.col);
-            let count = 0;
-            for (let i = -1; i <= 1; i++) {
-                for (let j = -1; j <= 1; j++) {
-                    const neighborRow = row + i;
-                    const neighborCol = col + j;
-                    if (neighborRow >= 0 && neighborRow < rows && neighborCol >= 0 && neighborCol < cols) {
-                        if (isMine(board.querySelector(`[data-row="${neighborRow}"][data-col="${neighborCol}"]`))) {
-                            count++;
+            const row = parseInt(cell.dataset.row); // parseInt converts a string to an integer
+            const col = parseInt(cell.dataset.col); // parseInt converts a string to an integer
+            let count = 0; // sets the count to 0
+            for (let i = -1; i <= 1; i++) { // loops through the rows
+                for (let j = -1; j <= 1; j++) { // loops through the columns
+                    const neighborRow = row + i; // sets the neighbor row
+                    const neighborCol = col + j; // sets the neighbor column
+                    if (neighborRow >= 0 && neighborRow < rows && neighborCol >= 0 && neighborCol < cols) { // checks if the neighbor is within the board
+                        if (isMine(board.querySelector(`[data-row="${neighborRow}"][data-col="${neighborCol}"]`))) { // checks if the neighbor is a mine
+                            count++; // increments the count
                         }
                     }
                 }
             }
-            return count;
+            return count; // returns the count
         }
 
         // Reveal a cell
-        function revealCell(event) {
-            const cell = event.target;
-            if (cell.dataset.state === 'hidden') {
-                if (isMine(cell)) {
-                    cell.classList.add('mine');
-                    alert('Game Over');
-                    resetGame();
-                } else {
-                    const minesAround = countMinesAround(cell);
-                    if (minesAround > 0) {
-                        cell.textContent = minesAround;
-                    } else {
-                        cell.textContent = '';
-                        cell.classList.remove('hidden');
+        function revealCell(event) { // event is the click event
+            const cell = event.target; // cell is the clicked cell
+            if (cell.dataset.state === 'hidden') { // checks if the cell is hidden
+                if (isMine(cell)) { // checks if the cell is a mine
+                    cell.classList.add('mine'); // adds the mine class to the cell
+                    alert('Game Over'); // alerts the user that the game is over
+                    resetGame(); // resets the game
+                } else { // if the cell is not a mine
+                    const minesAround = countMinesAround(cell); // counts the number of mines around the cell
+                    if (minesAround > 0) { // checks if there are mines around the cell
+                        cell.textContent = minesAround; // sets the text content of the cell to the number of mines around it
+                    } else { // if there are no mines around the cell
+                        cell.textContent = ''; // sets the text content of the cell to an empty string
+                        cell.classList.remove('hidden'); // removes the hidden class from the cell
                         const row = parseInt(cell.dataset.row);
                         const col = parseInt(cell.dataset.col);
-                        for (let i = -1; i <= 1; i++) {
-                            for (let j = -1; j <= 1; j++) {
-                                const neighborRow = row + i;
-                                const neighborCol = col + j;
-                                if (neighborRow >= 0 && neighborRow < rows && neighborCol >= 0 && neighborCol < cols) {
-                                    const neighborCell = board.querySelector(`[data-row="${neighborRow}"][data-col="${neighborCol}"]`);
-                                    if (neighborCell.dataset.state === 'hidden') {
-                                        revealCell({ target: neighborCell });
+                        for (let i = -1; i <= 1; i++) { // loops through the rows
+                            for (let j = -1; j <= 1; j++) { // loops through the columns
+                                const neighborRow = row + i; // sets the neighbor row
+                                const neighborCol = col + j; // sets the neighbor column
+                                if (neighborRow >= 0 && neighborRow < rows && neighborCol >= 0 && neighborCol < cols) { // checks if the neighbor is within the board
+                                    const neighborCell = board.querySelector(`[data-row="${neighborRow}"][data-col="${neighborCol}"]`); // gets the neighbor cell
+                                    if (neighborCell.dataset.state === 'hidden') { // checks if the neighbor cell is hidden
+                                        revealCell({ target: neighborCell }); // reveals the neighbor cell
                                     }
                                 }
                             }
                         }
                     }
-                    cell.classList.remove('hidden');
+                    cell.classList.remove('hidden'); // removes the hidden class from the cell
                 }
             }
         }
 
         // Toggle flag or question mark on right-click
-        function toggleFlag(event) {
-            event.preventDefault();
-            const cell = event.target;
-            if (cell.dataset.state === 'hidden') {
-                cell.dataset.state = 'flag';
+        function toggleFlag(event) { // event is the right-click event
+            event.preventDefault(); // prevents the default right-click behavior
+            const cell = event.target; // cell is the clicked cell
+            if (cell.dataset.state === 'hidden') { // checks if the cell is hidden
+                cell.dataset.state = 'flag'; // sets the state of the cell to flag
                 cell.innerHTML = '🚩'; 
                 // flag emoji
-                cell.classList.add('flag');
-            } else if (cell.dataset.state === 'flag') {
-                cell.dataset.state = 'question';
+                cell.classList.add('flag'); // adds the flag class to the cell
+            } else if (cell.dataset.state === 'flag') { // checks if the cell is flagged
+                cell.dataset.state = 'question'; // sets the state of the cell to question
                 cell.innerHTML = '❓'; 
                 // question emoji
-                cell.classList.remove('flag');
-                cell.classList.add('question');
-            } else if (cell.dataset.state === 'question') {
-                cell.dataset.state = 'hidden';
-                cell.textContent = '';
-                cell.classList.remove('question');
+                cell.classList.remove('flag'); // removes the flag class from the cell
+                cell.classList.add('question'); // adds the question class to the cell
+            } else if (cell.dataset.state === 'question') { // checks if the cell is marked with a question mark
+                cell.dataset.state = 'hidden'; // sets the state of the cell to hidden
+                cell.textContent = ''; // sets the text content of the cell to an empty string
+                cell.classList.remove('question'); // removes the question class from the cell
             }
         }
 
         // Reset the game
         function resetGame() {
-            board.innerHTML = '';
-            mineLocations = [];
-            initBoard();
-            generateMines();
+            board.innerHTML = ''; // clears the board
+            mineLocations = []; // clears the mine locations
+            initBoard(); // initializes the board
+            generateMines(); // generates the mines
         }
 
         // Initialize the game
-        initBoard();
-        generateMines();
+        initBoard(); // initializes the board
+        generateMines(); // generates the mines
     </script>
 </body>
 </html>
